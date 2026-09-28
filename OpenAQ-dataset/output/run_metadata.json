@@ -1,0 +1,48 @@
+{
+  "retrieved_at_utc": "2026-09-28T19:02:36.225085+00:00",
+  "api_base": "https://api.openaq.org/v3",
+  "endpoints_used": [
+    "GET https://api.openaq.org/v3/locations",
+    "GET https://api.openaq.org/v3/parameters",
+    "GET https://api.openaq.org/v3/sensors/{id}",
+    "GET https://api.openaq.org/v3/sensors/{id}/hours"
+  ],
+  "country_iso": "ID",
+  "parameter": "pm25",
+  "parameter_id": 2,
+  "units": [
+    "µg/m³"
+  ],
+  "period_start_utc": "2026-08-29T00:00:00Z",
+  "period_end_utc_exclusive": "2026-09-28T00:00:00Z",
+  "aggregation": "OpenAQ /sensors/{id}/hours (hourly, timestamp = period.datetimeFrom.utc)",
+  "qc_config": {
+    "WINDOW_DAYS": 30,
+    "MIN_COVERAGE": 0.8,
+    "TARGET_STATIONS_MIN": 3,
+    "TARGET_STATIONS_MAX": 5,
+    "TOP_K_WINDOWS": 5,
+    "WINDOW_SEPARATION_DAYS": 7,
+    "ONE_SENSOR_PER_LOCATION": true,
+    "DUPLICATE_CORR_THRESHOLD": 0.99,
+    "DUPLICATE_MIN_OVERLAP_HOURS": 168,
+    "OPTIONAL_MIN_UNIQUE_VALUES": null,
+    "OPTIONAL_MIN_RANGE": null,
+    "negative_values": "dibuang (keputusan desain)",
+    "gap_handling": "tidak diisi/interpolasi"
+  },
+  "n_candidate_locations": 75,
+  "n_candidate_sensors": 77,
+  "n_pass_qc": 14,
+  "selected_sensor_ids": [
+    17301510,
+    16694904,
+    17299934,
+    17286751,
+    17252598
+  ],
+  "sha256": {
+    "selected_stations.csv": "0ccfe3be58ff122ed34ffb0ee4566f8caf4a2d5ecf33623a7046ae82aa086dbc",
+    "combined_pm25_hourly.csv": "58fd31f0e0c814f1483c31a6bac80d34bb140ebc0b4be106a2fc01699c8f3be2"
+  }
+}
