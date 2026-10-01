@@ -1,7 +1,7 @@
 import csv, glob, gzip, os
 
-INPUT_GLOB = "dataset/network_data.txt"
-OUTPUT_CSV = "dataset/traces_parsed.csv"
+INPUT_GLOB = "raw/network_data.txt"
+OUTPUT_CSV = "results/traces_parsed.csv"
 MAX_TRACES_PER_FILE = None
 
 def open_any(path):

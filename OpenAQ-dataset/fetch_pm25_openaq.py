@@ -1,391 +1,258 @@
 """
-Pengambilan data PM2.5 hourly dari OpenAQ API v3 untuk membentuk payload simulasi MQTT/CoAP.
-Data ini adalah data observasi, BUKAN dataset training machine learning.
+Fetch PM2.5 hourly OpenAQ - kriteria sesuai kebutuhan simulasi
+(bukan evaluasi kualitas stasiun)
+
+Kriteria seleksi:
+  1. Ada sensor PM2.5 (semua sensor di lokasi digabung, bukan hanya satu).
+  2. Jendela 30 hari terakhir yang tersedia per stasiun (independen antarstasiun).
+  3. n_obs >= 120 -> diturunkan dari desain eksperimen sendiri:
+     600 pesan/run dibagi 5 node simulator = rata-rata 120 pesan/node,
+     sehingga tiap node punya cukup nilai PM2.5 riil tanpa pengulangan
+     berlebihan dalam satu run.
+  4. Variasi: mencakup >= 2 kategori WHO (Normal/Warning/Critical berbasis
+     rata-rata 24 jam), bukan ambang rentang angka yang tidak berdasar.
+
+completeness TIDAK dipakai sebagai syarat lolos/gagal -- tetap dihitung
+dan disimpan di metadata sebagai informasi tambahan saja.
 """
 
 import os
-import re
-import sys
-import json
 import time
-import hashlib
-from datetime import datetime, timezone
-
-import requests
 import pandas as pd
 from dotenv import load_dotenv
-
-# =====================================================================
-# PARAMETER DESAIN PENELITIAN
-# Semua angka di blok ini adalah KEPUTUSAN PENELITI, bukan ketentuan
-# WHO, OpenAQ, atau Xu & Chen (2025).
-# =====================================================================
-COUNTRY_ISO = "ID"
-PARAMETER_NAME = "pm25"           # nama parameter di OpenAQ (id dicari lewat /v3/parameters)
-WINDOW_DAYS = 30                  # desain: panjang periode pengamatan
-MIN_COVERAGE = 0.80               # desain: ambang QC coverage
-TARGET_STATIONS_MIN = 3           # desain: batas bawah (hanya untuk peringatan)
-TARGET_STATIONS_MAX = 5           # desain: batas atas, TIDAK dipaksakan tercapai
-
-# Pemilihan periode bersama (desain):
-TOP_K_WINDOWS = 5                 # berapa kandidat periode yang diverifikasi dengan data hourly
-WINDOW_SEPARATION_DAYS = 7        # kandidat periode harus berjarak minimal ini (hindari yang nyaris identik)
-WINDOW_START_OVERRIDE = None      # mis. "2025-03-01" -> kunci periode agar rerun identik
-
-# Anti-duplikasi (desain):
-ONE_SENSOR_PER_LOCATION = True    # maksimal 1 sensor terpilih per location_id
-DUPLICATE_CORR_THRESHOLD = 0.99   # None = nonaktif. Korelasi hourly >= ini dianggap duplikasi
-DUPLICATE_MIN_OVERLAP_HOURS = 168 # korelasi hanya dihitung jika irisan jam >= ini
-
-# QC variasi OPSIONAL (desain, default nonaktif; lihat statistik dulu baru putuskan):
-OPTIONAL_MIN_UNIQUE_VALUES = None # mis. 20
-OPTIONAL_MIN_RANGE = None         # mis. 5.0 (satuan µg/m³)
-
-# Teknis:
-BASE_URL = "https://api.openaq.org/v3"
-PAGE_LIMIT = 1000
-SLEEP = 1.0                       # jeda antar request (detik)
-OUT_DIR = "output"
-DEBUG_PRINT_FIRST_HOURS_RECORD = True   # cetak 1 record /hours mentah untuk verifikasi nama field
-# =====================================================================
+from openaq import OpenAQ
 
 load_dotenv()
-API_KEY = os.getenv("OPENAQ_API_KEY")
-if not API_KEY:
-    sys.exit("OPENAQ_API_KEY tidak ditemukan. Isi di file .env")
+client = OpenAQ(api_key=os.getenv("OPENAQ_API_KEY"))
 
-SESSION = requests.Session()
-SESSION.headers.update({"X-API-Key": API_KEY})
-ENDPOINTS_USED = set()
-CACHE = {}
-_debug_printed = False
+COUNTRY_CODE = "ID"
+WINDOW_DAYS = 30
+MIN_OBS = 120            # dari desain sendiri: 600 pesan/run / 5 node
+MIN_CATEGORIES = 2        # minimal mencakup 2 dari 3 kategori WHO
+N_STATIONS_MIN, N_STATIONS_MAX = 3, 5
 
-W = pd.Timedelta(days=WINDOW_DAYS)
-EXPECTED_HOURS = WINDOW_DAYS * 24
+WHO_NORMAL_MAX = 15.0
+WHO_WARNING_MAX = 37.5
+
+SLEEP = 0.3
+PAGE_LIMIT = 1000
+OUT_DIR = "raw"
+BBOX_LAT, BBOX_LON = (-11, 6), (95, 141)
+os.makedirs(OUT_DIR, exist_ok=True)
 
 
-# ---------------------------------------------------------------- helper API
-def api_get(path, params=None):
-    ENDPOINTS_USED.add("GET " + BASE_URL + re.sub(r"/\d+", "/{id}", path))
-    for attempt in range(6):
-        r = SESSION.get(BASE_URL + path, params=params, timeout=60)
-        if r.status_code == 429:
-            wait = int(r.headers.get("x-ratelimit-reset") or r.headers.get("Retry-After") or 60)
-            print(f"  rate limit, tunggu {wait}s...")
-            time.sleep(wait + 1)
-            continue
-        if r.status_code >= 500:
-            time.sleep(2 ** attempt)
-            continue
-        r.raise_for_status()
+def pick(obj, *names):
+    for n in names:
+        v = getattr(obj, n, None)
+        if v is not None:
+            return v
+    return None
+
+
+def to_utc(dt_obj):
+    if dt_obj is None:
+        return None
+    raw = dt_obj if isinstance(dt_obj, str) else pick(dt_obj, "utc")
+    return pd.to_datetime(raw, utc=True) if raw else None
+
+
+def get_indonesia_country_id():
+    for c in client.countries.list(limit=1000).results:
+        if c.code == COUNTRY_CODE:
+            return c.id
+    raise RuntimeError("Indonesia tidak ditemukan")
+
+
+def get_all_locations(country_id):
+    out, page = [], 1
+    while True:
+        res = client.locations.list(countries_id=country_id, limit=PAGE_LIMIT, page=page)
+        out.extend(res.results)
+        if len(res.results) < PAGE_LIMIT:
+            return out
+        page += 1
         time.sleep(SLEEP)
-        return r.json()
-    raise RuntimeError(f"Gagal setelah retry: {path}")
 
 
-def to_utc(x):
-    if x is None:
-        return None
-    if isinstance(x, dict):
-        x = x.get("utc")
-    return pd.to_datetime(x, utc=True) if x else None
+def in_bbox(loc):
+    lat, lon = loc.coordinates.latitude, loc.coordinates.longitude
+    return BBOX_LAT[0] <= lat <= BBOX_LAT[1] and BBOX_LON[0] <= lon <= BBOX_LON[1]
 
 
-def iso(ts):
-    return ts.strftime("%Y-%m-%dT%H:%M:%SZ")
+def pm25_sensors(loc):
+    return [s for s in loc.sensors if s.parameter.name == "pm25"]
 
 
-# ------------------------------------------------ Tahap 1: kandidat sensor
-def get_parameter_id():
-    res = api_get("/parameters", {"limit": PAGE_LIMIT})["results"]
-    match = [p for p in res if p.get("name") == PARAMETER_NAME]
-    if not match:
-        sys.exit(f"Parameter '{PARAMETER_NAME}' tidak ada di /v3/parameters")
-    return match[0]["id"]
-
-
-def collect_candidates(param_id):
-    cands, n_locs, page = [], 0, 1
+def fetch_hourly(sensor_id, dt_from, dt_to):
+    rows, page = [], 1
     while True:
-        res = api_get("/locations", {"iso": COUNTRY_ISO, "parameters_id": param_id,
-                                     "limit": PAGE_LIMIT, "page": page})["results"]
-        for loc in res:
-            n_locs += 1
-            coords = loc.get("coordinates") or {}
-            # SEMUA sensor PM2.5 di lokasi ini, bukan hanya yang pertama
-            for s in loc.get("sensors") or []:
-                p = s.get("parameter") or {}
-                if p.get("id") == param_id:
-                    cands.append({
-                        "location_id": loc["id"],
-                        "location_name": loc.get("name"),
-                        "sensor_id": s["id"],
-                        "parameter": p.get("name"),
-                        "unit": p.get("units"),
-                        "provider": (loc.get("provider") or {}).get("name"),
-                        "lat": coords.get("latitude"),
-                        "lon": coords.get("longitude"),
-                    })
-        if len(res) < PAGE_LIMIT:
+        res = client.measurements.list(
+            sensors_id=sensor_id, data="hours",
+            datetime_from=dt_from.isoformat(), datetime_to=dt_to.isoformat(),
+            limit=PAGE_LIMIT, page=page,
+        )
+        for m in res.results:
+            period = pick(m, "period")
+            rows.append({"timestamp": to_utc(pick(period, "datetime_from")) if period else None,
+                         "pm25": m.value})
+        if len(res.results) < PAGE_LIMIT:
             break
         page += 1
-    return n_locs, cands
+        time.sleep(SLEEP)
+    return pd.DataFrame(rows)
 
 
-def enrich_sensor_dates(cands):
-    """datetimeFirst/Last level SENSOR diambil dari /v3/sensors/{id}."""
-    for i, c in enumerate(cands, 1):
-        try:
-            s = api_get(f"/sensors/{c['sensor_id']}")["results"][0]
-            c["first"], c["last"] = to_utc(s.get("datetimeFirst")), to_utc(s.get("datetimeLast"))
-        except Exception as e:
-            c["first"] = c["last"] = None
-            c["error"] = f"gagal metadata: {e}"
-        if i % 25 == 0:
-            print(f"  metadata sensor {i}/{len(cands)}")
+def fetch_hourly_merged(sensor_ids, dt_from, dt_to):
+    frames = []
+    for sid in sensor_ids:
+        df = fetch_hourly(sid, dt_from, dt_to)
+        if not df.empty:
+            frames.append(df)
+        time.sleep(SLEEP)
+    if not frames:
+        return pd.DataFrame(columns=["timestamp", "pm25"])
+    merged = pd.concat(frames, ignore_index=True)
+    merged = merged.dropna(subset=["timestamp", "pm25"])
+    merged = merged[merged["pm25"] >= 0]
+    return merged.groupby("timestamp", as_index=False)["pm25"].mean()
 
 
-# ------------------------------------------- Tahap 2: pemilihan periode bersama
-def sensor_start_range(c):
-    """Rentang start (hari UTC) agar [start, start+W) berada dalam [first, last]."""
-    if c.get("first") is None or c.get("last") is None:
+def classify_by_24h_average(df_hourly):
+    daily = df_hourly.set_index("timestamp")["pm25"].resample("24h").mean().dropna()
+    if daily.empty:
+        return daily, {"pct_normal": None, "pct_warning": None, "pct_critical": None}
+    stats = {
+        "pct_normal": round((daily <= WHO_NORMAL_MAX).mean() * 100, 1),
+        "pct_warning": round(((daily > WHO_NORMAL_MAX) & (daily <= WHO_WARNING_MAX)).mean() * 100, 1),
+        "pct_critical": round((daily > WHO_WARNING_MAX).mean() * 100, 1),
+    }
+    return daily, stats
+
+
+def profile_station(loc):
+    sensors = pm25_sensors(loc)
+    if not sensors:
         return None
-    s0, s1 = c["first"].ceil("D"), (c["last"] - W).floor("D")
-    return (s0, s1) if s0 <= s1 else None
+
+    last = to_utc(pick(loc, "datetime_last"))
+    first = to_utc(pick(loc, "datetime_first"))
+    if last is None or first is None:
+        return None
+
+    window_end = min(last, pd.Timestamp.now(tz="UTC"))
+    window_start = max(window_end - pd.Timedelta(days=WINDOW_DAYS), first)
+
+    df = fetch_hourly_merged([s.id for s in sensors], window_start, window_end)
+    if df.empty:
+        return None
+
+    daily, who_stats = classify_by_24h_average(df)
+    n_categories = sum(1 for k in ("pct_normal", "pct_warning", "pct_critical")
+                        if who_stats[k] is not None and who_stats[k] > 0)
+
+    return {
+        "location_id": loc.id,
+        "name": loc.name,
+        "provider": loc.provider.name if loc.provider else "Unknown",
+        "sensor_ids": [s.id for s in sensors],
+        "window_start": window_start,
+        "window_end": window_end,
+        "n_obs": len(df),
+        "n_days_classified": len(daily),
+        "n_categories": n_categories,
+        "completeness": round(len(df) / (WINDOW_DAYS * 24), 3),  # info saja, bukan syarat
+        "pm25_min": df["pm25"].min(),
+        "pm25_mean": df["pm25"].mean(),
+        "pm25_p95": df["pm25"].quantile(0.95),
+        "pm25_max": df["pm25"].max(),
+        **who_stats,
+        "raw": df,
+    }
 
 
-def candidate_windows(cands):
-    ranges = {c["sensor_id"]: sensor_start_range(c) for c in cands}
-    ranges = {k: v for k, v in ranges.items() if v}
-    if not ranges:
-        return []
-    breakpoints = {b for r in ranges.values() for b in r}
-    scored = [(sum(r[0] <= s <= r[1] for r in ranges.values()), s) for s in breakpoints]
-    scored.sort(key=lambda x: (-x[0], -x[1].value))          # banyak sensor dulu, lalu paling baru
-    chosen = []
-    for n, s in scored:
-        if all(abs((s - t).days) >= WINDOW_SEPARATION_DAYS for _, t in chosen):
-            chosen.append((n, s))
-        if len(chosen) >= TOP_K_WINDOWS:
+def select_stations(profiles):
+    """Lolos jika n_obs >= 120 (dari desain eksperimen sendiri) DAN
+    mencakup >= 2 kategori WHO. completeness tidak dipakai di sini."""
+    eligible = [p for p in profiles
+                if p["n_obs"] >= MIN_OBS and p["n_categories"] >= MIN_CATEGORIES]
+    eligible.sort(key=lambda p: p["n_obs"], reverse=True)
+
+    if len(eligible) <= N_STATIONS_MAX:
+        return eligible
+
+    chosen, covered = [], set()
+    for p in eligible:
+        cats = set()
+        if p["pct_normal"]: cats.add("normal")
+        if p["pct_warning"]: cats.add("warning")
+        if p["pct_critical"]: cats.add("critical")
+        if cats - covered:
+            chosen.append(p)
+            covered |= cats
+        if len(chosen) == N_STATIONS_MAX:
             break
-    return chosen
-
-
-# ---------------------------------------------------- Tahap 3: data hourly + QC
-def fetch_hourly(sensor_id, start):
-    """GET /v3/sensors/{id}/hours -> DataFrame [datetime, pm25], dalam [start, start+W)."""
-    global _debug_printed
-    key = (sensor_id, start)
-    if key in CACHE:
-        return CACHE[key]
-    end, rows, page = start + W, [], 1
-    while True:
-        res = api_get(f"/sensors/{sensor_id}/hours", {
-            "datetime_from": iso(start), "datetime_to": iso(end),
-            "limit": PAGE_LIMIT, "page": page})["results"]
-        if DEBUG_PRINT_FIRST_HOURS_RECORD and res and not _debug_printed:
-            print("\n[DEBUG] contoh record /hours mentah:\n", json.dumps(res[0], indent=2)[:1500], "\n")
-            _debug_printed = True
-        for m in res:
-            rows.append((to_utc((m.get("period") or {}).get("datetimeFrom")), m.get("value")))
-        if len(res) < PAGE_LIMIT:
+    for p in eligible:
+        if len(chosen) >= N_STATIONS_MAX:
             break
-        page += 1
-    df = pd.DataFrame(rows, columns=["datetime", "pm25"]).dropna()
-    n_raw = len(df)
-    df = df[(df["datetime"] >= start) & (df["datetime"] < end)]
-    df = df[df["pm25"] >= 0]                                  # QC desain: PM2.5 negatif = tidak valid
-    df = df.drop_duplicates("datetime").sort_values("datetime").reset_index(drop=True)
-    CACHE[key] = (df, n_raw - len(df))
-    return CACHE[key]
-
-
-def evaluate(c, start):
-    df, n_dropped = fetch_hourly(c["sensor_id"], start)
-    v = df["pm25"]
-    rec = {"observed_hours": len(df), "coverage": len(df) / EXPECTED_HOURS,
-           "n_dropped": n_dropped, "n_unique": v.nunique()}
-    rec.update({
-        "mean": v.mean(), "median": v.median(), "min": v.min(), "max": v.max(),
-        "std": v.std(), "q25": v.quantile(.25), "q75": v.quantile(.75), "q98": v.quantile(.98),
-    } if len(v) else {k: float("nan") for k in
-                      ["mean", "median", "min", "max", "std", "q25", "q75", "q98"]})
-    return rec
-
-
-def run_window(cands, start):
-    recs = []
-    end = start + W
-    for c in cands:
-        r = sensor_start_range(c)
-        rec = {**c, "status": None, "reason": None}
-        if r is None:
-            rec.update(status="ditolak", reason=c.get("error") or "datetimeFirst/Last tidak tersedia/tidak cukup 30 hari")
-        elif not (r[0] <= start <= r[1]):
-            rec.update(status="ditolak", reason="metadata datetimeFirst/Last tidak mencakup periode terpilih")
-        else:
-            try:
-                rec.update(evaluate(c, start))
-                if rec["observed_hours"] == 0:
-                    rec.update(status="ditolak", reason="tidak ada data hourly pada periode")
-                elif rec["coverage"] < MIN_COVERAGE:
-                    rec.update(status="ditolak",
-                               reason=f"coverage {rec['coverage']:.1%} < {MIN_COVERAGE:.0%}")
-                elif OPTIONAL_MIN_UNIQUE_VALUES and rec["n_unique"] < OPTIONAL_MIN_UNIQUE_VALUES:
-                    rec.update(status="ditolak", reason=f"nilai unik {rec['n_unique']} < {OPTIONAL_MIN_UNIQUE_VALUES} (QC opsional)")
-                elif OPTIONAL_MIN_RANGE and (rec["max"] - rec["min"]) < OPTIONAL_MIN_RANGE:
-                    rec.update(status="ditolak", reason=f"range < {OPTIONAL_MIN_RANGE} (QC opsional)")
-                else:
-                    rec["status"] = "lolos_qc"
-            except Exception as e:
-                rec.update(status="ditolak", reason=f"error fetch: {e}")
-        recs.append(rec)
-    return recs
-
-
-# ------------------------------------------------------- Tahap 4: seleksi akhir
-def select_final(recs, start):
-    passing = sorted([r for r in recs if r["status"] == "lolos_qc"],
-                     key=lambda r: (-r["observed_hours"], -r["std"], r["sensor_id"]))
-    selected = []
-    for r in passing:
-        if len(selected) >= TARGET_STATIONS_MAX:
-            r.update(status="tidak_dipilih", reason=f"lolos QC, di luar kuota {TARGET_STATIONS_MAX} (ranking lebih rendah)")
-            continue
-        if ONE_SENSOR_PER_LOCATION and any(s["location_id"] == r["location_id"] for s in selected):
-            r.update(status="tidak_dipilih", reason="lokasi sama dengan sensor yang sudah dipilih")
-            continue
-        if DUPLICATE_CORR_THRESHOLD is not None:
-            a = fetch_hourly(r["sensor_id"], start)[0].set_index("datetime")["pm25"]
-            dup = None
-            for s in selected:
-                b = fetch_hourly(s["sensor_id"], start)[0].set_index("datetime")["pm25"]
-                j = pd.concat([a, b], axis=1, join="inner")
-                if len(j) >= DUPLICATE_MIN_OVERLAP_HOURS and j.iloc[:, 0].corr(j.iloc[:, 1]) >= DUPLICATE_CORR_THRESHOLD:
-                    dup = s["sensor_id"]
-                    break
-            if dup:
-                r.update(status="tidak_dipilih", reason=f"mirip duplikasi dengan sensor {dup} (korelasi >= {DUPLICATE_CORR_THRESHOLD})")
-                continue
-        r["status"] = "dipilih"
-        selected.append(r)
-    return selected
-
-
-# ----------------------------------------------------------------------- main
-def sha256(path):
-    return hashlib.sha256(open(path, "rb").read()).hexdigest()
+        if p not in chosen:
+            chosen.append(p)
+    return chosen[:N_STATIONS_MAX]
 
 
 def main():
-    os.makedirs(os.path.join(OUT_DIR, "sensors"), exist_ok=True)
-    retrieved_at = datetime.now(timezone.utc)
+    print("Ambil lokasi PM2.5 Indonesia...")
+    locs = get_all_locations(get_indonesia_country_id())
+    locs = [l for l in locs if in_bbox(l) and pm25_sensors(l)]
+    print(f"Kandidat: {len(locs)}\n")
 
-    param_id = get_parameter_id()
-    n_locs, cands = collect_candidates(param_id)
-    print(f"Kandidat lokasi: {n_locs} | kandidat sensor {PARAMETER_NAME}: {len(cands)}")
-    enrich_sensor_dates(cands)
+    profiles = []
+    for i, loc in enumerate(locs, 1):
+        try:
+            p = profile_station(loc)
+        except Exception as e:
+            print(f"  [{i}/{len(locs)}] {loc.name}: gagal ({e})")
+            continue
+        if p is None:
+            continue
+        profiles.append(p)
+        print(f"  [{i}/{len(locs)}] {loc.name}: n_obs={p['n_obs']} "
+              f"kategori={p['n_categories']} sensors={p['sensor_ids']}")
 
-    # --- periode
-    if WINDOW_START_OVERRIDE:
-        windows = [(None, pd.Timestamp(WINDOW_START_OVERRIDE, tz="UTC"))]
-    else:
-        windows = candidate_windows(cands)
-    if not windows:
-        sys.exit("Tidak ada periode 30 hari yang tercakup metadata sensor mana pun.")
+    if not profiles:
+        raise SystemExit("Tidak ada stasiun dengan data.")
 
-    best = None
-    for n_meta, start in windows:
-        print(f"\nVerifikasi periode {start.date()} s/d {(start + W).date()} (sensor tercakup metadata: {n_meta})")
-        recs = run_window(cands, start)
-        n_pass = sum(r["status"] == "lolos_qc" for r in recs)
-        tot = sum(r.get("observed_hours") or 0 for r in recs if r["status"] == "lolos_qc")
-        print(f"  -> lolos QC: {n_pass}")
-        key = (n_pass, tot, start.value)          # sensor lolos terbanyak, lalu total jam valid, lalu terbaru
-        if best is None or key > best[0]:
-            best = (key, start, recs)
-    _, start, recs = best
-    end = start + W
-    if best[0][0] == 0:
-        pd.DataFrame(recs).to_csv(os.path.join(OUT_DIR, "candidates_all.csv"), index=False)
-        sys.exit("Tidak ada sensor yang lolos QC pada periode manapun. Lihat output/candidates_all.csv")
+    cols = ["name", "provider", "n_obs", "n_days_classified", "n_categories",
+            "completeness", "pm25_min", "pm25_mean", "pm25_p95", "pm25_max",
+            "pct_normal", "pct_warning", "pct_critical"]
+    print("\n=== SEMUA KANDIDAT ===")
+    print(pd.DataFrame(profiles)[cols].round(1).to_string(index=False))
 
-    selected = select_final(recs, start)
-    if len(selected) < TARGET_STATIONS_MIN:
-        print(f"\n[PERINGATAN] Hanya {len(selected)} sensor lolos (< {TARGET_STATIONS_MIN}). Tidak dipaksakan.")
+    chosen = select_stations(profiles)
+    if len(chosen) < N_STATIONS_MIN:
+        print(f"\nPeringatan: cuma {len(chosen)} stasiun lolos n_obs>={MIN_OBS} "
+              f"dan kategori>={MIN_CATEGORIES}.")
 
-    # --- output
-    cols = ["location_id", "location_name", "sensor_id", "parameter", "unit", "provider",
-            "datetime_first", "datetime_last", "selected_period_start", "selected_period_end",
-            "expected_hours", "observed_hours", "coverage",
-            "mean", "median", "min", "max", "std", "q25", "q75", "q98"]
-    sel_rows = [{**r, "datetime_first": iso(r["first"]), "datetime_last": iso(r["last"]),
-                 "selected_period_start": iso(start), "selected_period_end": iso(end),
-                 "expected_hours": EXPECTED_HOURS} for r in selected]
-    sel_df = pd.DataFrame(sel_rows)[cols]
-    sel_path = os.path.join(OUT_DIR, "selected_stations.csv")
-    sel_df.to_csv(sel_path, index=False)
+    print(f"\n=== {len(chosen)} STASIUN TERPILIH ===")
+    print(pd.DataFrame(chosen)[cols].round(1).to_string(index=False))
+
+    meta_df = pd.DataFrame(chosen)[[
+        "location_id", "name", "provider", "sensor_ids",
+        "window_start", "window_end", "n_obs", "completeness"
+    ]].copy()
+    meta_df["sensor_ids"] = meta_df["sensor_ids"].apply(lambda ids: ",".join(map(str, ids)))
+    meta_df.to_csv(os.path.join(OUT_DIR, "stations_metadata.csv"), index=False)
 
     frames = []
-    for r in selected:
-        d = fetch_hourly(r["sensor_id"], start)[0].copy()
-        d["location_id"], d["location_name"] = r["location_id"], r["location_name"]
-        d["sensor_id"], d["unit"] = r["sensor_id"], r["unit"]
-        d = d[["datetime", "location_id", "location_name", "sensor_id", "pm25", "unit"]]
-        d.to_csv(os.path.join(OUT_DIR, "sensors", f"pm25_sensor_{r['sensor_id']}.csv"), index=False)
-        frames.append(d)
-    comb_path = os.path.join(OUT_DIR, "combined_pm25_hourly.csv")
-    pd.concat(frames, ignore_index=True).to_csv(comb_path, index=False)   # jam kosong TIDAK diisi/interpolasi
+    for p in chosen:
+        df = p["raw"].copy()
+        df.insert(0, "location", p["name"])
+        df.insert(1, "sensor_ids", ",".join(map(str, p["sensor_ids"])))
+        frames.append(df[["timestamp", "location", "sensor_ids", "pm25"]])
+    pd.concat(frames, ignore_index=True).sort_values(["location", "timestamp"]) \
+        .to_csv(os.path.join(OUT_DIR, "pm25_payload.csv"), index=False)
 
-    all_df = pd.DataFrame(recs)
-    all_df.to_csv(os.path.join(OUT_DIR, "candidates_all.csv"), index=False)
-    all_df[all_df["status"].isin(["ditolak", "tidak_dipilih"])].to_csv(
-        os.path.join(OUT_DIR, "rejected_sensors.csv"), index=False)
-
-    meta = {
-        "retrieved_at_utc": retrieved_at.isoformat(),
-        "api_base": BASE_URL, "endpoints_used": sorted(ENDPOINTS_USED),
-        "country_iso": COUNTRY_ISO, "parameter": PARAMETER_NAME, "parameter_id": param_id,
-        "units": sorted({r["unit"] for r in selected}),
-        "period_start_utc": iso(start), "period_end_utc_exclusive": iso(end),
-        "aggregation": "OpenAQ /sensors/{id}/hours (hourly, timestamp = period.datetimeFrom.utc)",
-        "qc_config": {
-            "WINDOW_DAYS": WINDOW_DAYS, "MIN_COVERAGE": MIN_COVERAGE,
-            "TARGET_STATIONS_MIN": TARGET_STATIONS_MIN, "TARGET_STATIONS_MAX": TARGET_STATIONS_MAX,
-            "TOP_K_WINDOWS": TOP_K_WINDOWS, "WINDOW_SEPARATION_DAYS": WINDOW_SEPARATION_DAYS,
-            "ONE_SENSOR_PER_LOCATION": ONE_SENSOR_PER_LOCATION,
-            "DUPLICATE_CORR_THRESHOLD": DUPLICATE_CORR_THRESHOLD,
-            "DUPLICATE_MIN_OVERLAP_HOURS": DUPLICATE_MIN_OVERLAP_HOURS,
-            "OPTIONAL_MIN_UNIQUE_VALUES": OPTIONAL_MIN_UNIQUE_VALUES,
-            "OPTIONAL_MIN_RANGE": OPTIONAL_MIN_RANGE,
-            "negative_values": "dibuang (keputusan desain)", "gap_handling": "tidak diisi/interpolasi",
-        },
-        "n_candidate_locations": n_locs, "n_candidate_sensors": len(cands),
-        "n_pass_qc": int(sum(r["status"] in ("lolos_qc", "dipilih", "tidak_dipilih") for r in recs)),
-        "selected_sensor_ids": [r["sensor_id"] for r in selected],
-        "sha256": {"selected_stations.csv": sha256(sel_path), "combined_pm25_hourly.csv": sha256(comb_path)},
-    }
-    with open(os.path.join(OUT_DIR, "run_metadata.json"), "w", encoding="utf-8") as f:
-        json.dump(meta, f, indent=2, ensure_ascii=False)
-
-    # --- laporan terminal
-    pd.set_option("display.width", 250)
-    print("\n" + "=" * 70)
-    print(f"Kandidat lokasi        : {n_locs}")
-    print(f"Kandidat sensor {PARAMETER_NAME:<5}  : {len(cands)}")
-    print(f"Periode terpilih (UTC) : {start.date()} s/d {(end - pd.Timedelta(hours=1)).date()} ({WINDOW_DAYS} hari, {EXPECTED_HOURS} jam)")
-    print(f"Lolos coverage >= {MIN_COVERAGE:.0%} : {meta['n_pass_qc']}")
-    print(f"Sensor dipilih         : {len(selected)}")
-    print("\n--- Semua yang lolos QC (ranking: observed_hours desc, std desc) ---")
-    ok = all_df[all_df["status"].isin(["dipilih", "tidak_dipilih"])]
-    show = ["status", "location_id", "location_name", "sensor_id", "observed_hours", "coverage",
-            "mean", "median", "min", "max", "std", "q25", "q75", "q98", "reason"]
-    if not ok.empty:
-        print(ok[show].round(2).to_string(index=False))
-    print("\n--- Alasan penolakan (ringkas) ---")
-    rej = all_df[all_df["status"] == "ditolak"]["reason"].fillna("?").str.replace(r"[\d.]+%", "X%", regex=True)
-    print(rej.value_counts().to_string())
-    print(f"\nOutput tersimpan di ./{OUT_DIR}/")
+    print(f"\nDisimpan ke {OUT_DIR}/")
+    client.close()
 
 
 if __name__ == "__main__":

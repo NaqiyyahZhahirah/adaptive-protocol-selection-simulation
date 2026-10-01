@@ -2,7 +2,7 @@ import json
 import numpy as np
 import pandas as pd
 
-CSV = "dataset/traces_parsed.csv"
+CSV = "results/traces_parsed.csv"
 WINDOW_SECONDS = 3600
 MIN_TRACES = 200
 LOSS_METHOD = "B"
@@ -55,6 +55,6 @@ profile = {
     "rtt_p25": rtt_q[25], "rtt_p50": rtt_q[50], "rtt_p75": rtt_q[75], "rtt_p99": rtt_q[99],
     "loss_p25": loss_q[25], "loss_p50": loss_q[50], "loss_p75": loss_q[75], "loss_p99": loss_q[99],
 }
-json.dump(profile, open("dataset/network_profile.json", "w"), indent=2)
-np.save("dataset/rtt_samples.npy", rtt.to_numpy())
-win.to_csv("dataset/loss_windows.csv", index=False)
+json.dump(profile, open("results/network_profile.json", "w"), indent=2)
+np.save("results/rtt_samples.npy", rtt.to_numpy())
+win.to_csv("results/loss_windows.csv", index=False)
