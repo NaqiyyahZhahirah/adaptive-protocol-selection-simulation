@@ -36,7 +36,7 @@ WHO_WARNING_MAX = 37.5
 
 SLEEP = 0.3
 PAGE_LIMIT = 1000
-OUT_DIR = "raw"
+OUT_DIR = "OpenAQ-dataset/data"
 BBOX_LAT, BBOX_LON = (-11, 6), (95, 141)
 os.makedirs(OUT_DIR, exist_ok=True)
 
@@ -118,7 +118,8 @@ def fetch_hourly_merged(sensor_ids, dt_from, dt_to):
 
 
 def classify_by_24h_average(df_hourly):
-    daily = df_hourly.set_index("timestamp")["pm25"].resample("24h").mean().dropna()
+    s = df_hourly.sort_values("timestamp").set_index("timestamp")["pm25"]
+    daily = s.rolling("24h", min_periods=18).mean().dropna()
     if daily.empty:
         return daily, {"pct_normal": None, "pct_warning": None, "pct_critical": None}
     stats = {
