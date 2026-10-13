@@ -67,3 +67,12 @@ def map_to_protocol(score):
     if score >= 35:
         return {"protocol": "MQTT", "qos": 1}
     return {"protocol": "CoAP", "mode": "CON"}
+
+_sim = ctrl.ControlSystemSimulation(decision_ctrl)
+
+def compute_reliability(rtt_ms, packet_loss_pct, pm25_24h):
+    _sim.input["rtt_ms"] = float(np.clip(rtt_ms, 0, RTT_MAX))
+    _sim.input["packet_loss_pct"] = float(np.clip(packet_loss_pct, 0, LOSS_MAX))
+    _sim.input["pm25_24h"] = float(np.clip(pm25_24h, 0, V_MAKS))
+    _sim.compute()
+    return _sim.output["reliability_need"]
