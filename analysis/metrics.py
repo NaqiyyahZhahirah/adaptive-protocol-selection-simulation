@@ -74,8 +74,8 @@ if __name__ == "__main__":
         print("\n=== Distribusi keputusan adaptif per kategori (%) ===")
         print((pd.crosstab(ad.category, ad.protocol, normalize="index") * 100).round(1))
         # Estimasi overhead adaptif berdasarkan kategori
-        df_char = df[df.scenario == "char"].copy()
-        msgs_comp = msgs.copy()
-        est_ov = estimated_overhead_by_category(msgs_comp, df_char)
-        print("\n=== Estimasi overhead adaptif per kategori (%) ===")
-        print(est_ov.to_string())
+        # df_char = df[df.scenario == "char"].copy()
+        # msgs_comp = msgs.copy()
+        # est_ov = estimated_overhead_by_category(msgs_comp, df_char)
+        # print("\n=== Estimasi overhead adaptif per kategori (%) ===")
+        # print(est_ov.to_string())
