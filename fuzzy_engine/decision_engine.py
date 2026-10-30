@@ -62,9 +62,7 @@ def compute_reliability(rtt_ms, packet_loss_pct, pm25_24h):
 
 
 def map_to_protocol(score):
-    """Tabel 3.6"""
-    if score >= 65:
-        return {"protocol": "MQTT", "qos": 2}
+    """Map reliability need to CoAP CON below 35, otherwise MQTT QoS 1."""
     if score >= 35:
         return {"protocol": "MQTT", "qos": 1}
     return {"protocol": "CoAP", "mode": "CON"}

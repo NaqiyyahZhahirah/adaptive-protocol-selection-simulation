@@ -1,4 +1,4 @@
 run_id,scenario,condition,seed,n_sent,n_recv,payload_bytes_total,wire_tcp,wire_udp,wire_total,duration_s
-smoke-mqtt_qos1-dlow_llow-s1,mqtt_qos1,dlow_llow,1,60,60,4154,11178,0,11178,2.7
-smoke-coap_con-dlow_llow-s1,coap_con,dlow_llow,1,60,60,4154,0,8990,8990,5.6
-smoke-adaptive-dlow_llow-s1,adaptive,dlow_llow,1,60,60,4154,9551,1255,10806,4.8
+smoke-mqtt_qos1-dlow_llow-s1,mqtt_qos1,dlow_llow,1,60,60,4154,11258,0,11258,2.7
+smoke-coap_con-dlow_llow-s1,coap_con,dlow_llow,1,60,60,4154,0,8989,8989,4.5
+smoke-adaptive-dlow_llow-s1,adaptive,dlow_llow,1,60,60,4154,9511,1255,10766,4.5

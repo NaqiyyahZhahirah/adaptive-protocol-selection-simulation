@@ -1,0 +1,181 @@
+run_id,scenario,condition,seed,node,msg_id,seq,category,pm25_hourly,pm25_24h,protocol,score,acked,success,t_send,latency_ms,payload_bytes
+fair-smoke-mqtt_qos1-dlow_llow-s1,mqtt_qos1,dlow_llow,1,Bogor Selatan,0,0,critical,16.7,51.98,mqtt_qos1,,1,1,0.0005,18.87,68
+fair-smoke-mqtt_qos1-dlow_llow-s1,mqtt_qos1,dlow_llow,1,Bogor Selatan,1,1,critical,45.1,38.8,mqtt_qos1,,1,1,0.1107,25.49,68
+fair-smoke-mqtt_qos1-dlow_llow-s1,mqtt_qos1,dlow_llow,1,Bogor Selatan,2,2,warning,22.3,36.3,mqtt_qos1,,1,1,0.2224,44.82,68
+fair-smoke-mqtt_qos1-dlow_llow-s1,mqtt_qos1,dlow_llow,1,Bogor Selatan,3,3,warning,28.8,27.57,mqtt_qos1,,1,1,0.331,13.63,68
+fair-smoke-mqtt_qos1-dlow_llow-s1,mqtt_qos1,dlow_llow,1,Bogor Selatan,4,4,warning,22.7,26.29,mqtt_qos1,,1,1,0.4436,32.21,68
+fair-smoke-mqtt_qos1-dlow_llow-s1,mqtt_qos1,dlow_llow,1,Bogor Selatan,5,5,warning,41.3,35.28,mqtt_qos1,,1,1,0.553,30.87,68
+fair-smoke-mqtt_qos1-dlow_llow-s1,mqtt_qos1,dlow_llow,1,Bogor Selatan,6,6,critical,37.8,38.43,mqtt_qos1,,1,1,0.6637,36.86,68
+fair-smoke-mqtt_qos1-dlow_llow-s1,mqtt_qos1,dlow_llow,1,Bogor Selatan,7,7,critical,33.1,39.3,mqtt_qos1,,1,1,0.7756,31.44,68
+fair-smoke-mqtt_qos1-dlow_llow-s1,mqtt_qos1,dlow_llow,1,Bogor Selatan,8,8,critical,35.6,46.07,mqtt_qos1,,1,1,0.8731,8.11,68
+fair-smoke-mqtt_qos1-dlow_llow-s1,mqtt_qos1,dlow_llow,1,Bogor Selatan,9,9,critical,27.5,39.9,mqtt_qos1,,1,1,0.9829,18.99,68
+fair-smoke-mqtt_qos1-dlow_llow-s1,mqtt_qos1,dlow_llow,1,Bogor Selatan,10,10,warning,1.08,29.2,mqtt_qos1,,1,1,1.0945,2.12,68
+fair-smoke-mqtt_qos1-dlow_llow-s1,mqtt_qos1,dlow_llow,1,Bogor Selatan,11,11,warning,36.9,23.31,mqtt_qos1,,1,1,1.2076,10.59,69
+fair-smoke-mqtt_qos1-dlow_llow-s1,mqtt_qos1,dlow_llow,1,Jakarta Central,1000,0,warning,3.0,36.25,mqtt_qos1,,1,1,0.0009,29.75,72
+fair-smoke-mqtt_qos1-dlow_llow-s1,mqtt_qos1,dlow_llow,1,Jakarta Central,1001,1,warning,9.0,28.54,mqtt_qos1,,1,1,0.1099,34.2,72
+fair-smoke-mqtt_qos1-dlow_llow-s1,mqtt_qos1,dlow_llow,1,Jakarta Central,1002,2,warning,9.0,15.54,mqtt_qos1,,1,1,0.2223,58.88,72
+fair-smoke-mqtt_qos1-dlow_llow-s1,mqtt_qos1,dlow_llow,1,Jakarta Central,1003,3,warning,51.0,23.0,mqtt_qos1,,1,1,0.3324,19.2,73
+fair-smoke-mqtt_qos1-dlow_llow-s1,mqtt_qos1,dlow_llow,1,Jakarta Central,1004,4,warning,30.0,23.25,mqtt_qos1,,1,1,0.444,33.04,73
+fair-smoke-mqtt_qos1-dlow_llow-s1,mqtt_qos1,dlow_llow,1,Jakarta Central,1005,5,warning,7.0,15.71,mqtt_qos1,,1,1,0.5533,17.32,72
+fair-smoke-mqtt_qos1-dlow_llow-s1,mqtt_qos1,dlow_llow,1,Jakarta Central,1006,6,warning,7.0,15.58,mqtt_qos1,,1,1,0.6633,33.56,72
+fair-smoke-mqtt_qos1-dlow_llow-s1,mqtt_qos1,dlow_llow,1,Jakarta Central,1007,7,normal,4.0,12.42,mqtt_qos1,,1,1,0.7772,31.45,72
+fair-smoke-mqtt_qos1-dlow_llow-s1,mqtt_qos1,dlow_llow,1,Jakarta Central,1008,8,normal,6.0,11.12,mqtt_qos1,,1,1,0.8745,38.1,72
+fair-smoke-mqtt_qos1-dlow_llow-s1,mqtt_qos1,dlow_llow,1,Jakarta Central,1009,9,normal,2.0,9.5,mqtt_qos1,,1,1,0.9849,15.5,72
+fair-smoke-mqtt_qos1-dlow_llow-s1,mqtt_qos1,dlow_llow,1,Jakarta Central,1010,10,normal,8.0,8.04,mqtt_qos1,,1,1,1.0949,51.52,72
+fair-smoke-mqtt_qos1-dlow_llow-s1,mqtt_qos1,dlow_llow,1,Jakarta Central,1011,11,normal,7.0,7.46,mqtt_qos1,,1,1,1.2087,10.16,72
+fair-smoke-mqtt_qos1-dlow_llow-s1,mqtt_qos1,dlow_llow,1,Wedomartani,2000,0,warning,38.1,28.57,mqtt_qos1,,1,1,0.0012,33.81,69
+fair-smoke-mqtt_qos1-dlow_llow-s1,mqtt_qos1,dlow_llow,1,Wedomartani,2001,1,warning,34.3,32.61,mqtt_qos1,,1,1,0.1105,42.34,69
+fair-smoke-mqtt_qos1-dlow_llow-s1,mqtt_qos1,dlow_llow,1,Wedomartani,2002,2,warning,8.54,30.99,mqtt_qos1,,1,1,0.2199,1022.44,68
+fair-smoke-mqtt_qos1-dlow_llow-s1,mqtt_qos1,dlow_llow,1,Wedomartani,2003,3,warning,36.8,31.67,mqtt_qos1,,1,1,0.3319,911.25,69
+fair-smoke-mqtt_qos1-dlow_llow-s1,mqtt_qos1,dlow_llow,1,Wedomartani,2004,4,warning,19.6,32.67,mqtt_qos1,,1,1,0.4433,800.64,69
+fair-smoke-mqtt_qos1-dlow_llow-s1,mqtt_qos1,dlow_llow,1,Wedomartani,2005,5,warning,12.5,29.87,mqtt_qos1,,1,1,0.5527,692.35,69
+fair-smoke-mqtt_qos1-dlow_llow-s1,mqtt_qos1,dlow_llow,1,Wedomartani,2006,6,warning,32.0,26.2,mqtt_qos1,,1,1,0.6638,582.4,69
+fair-smoke-mqtt_qos1-dlow_llow-s1,mqtt_qos1,dlow_llow,1,Wedomartani,2007,7,warning,37.7,26.34,mqtt_qos1,,1,1,0.7763,471.17,69
+fair-smoke-mqtt_qos1-dlow_llow-s1,mqtt_qos1,dlow_llow,1,Wedomartani,2008,8,warning,78.8,35.52,mqtt_qos1,,1,1,0.8736,374.73,69
+fair-smoke-mqtt_qos1-dlow_llow-s1,mqtt_qos1,dlow_llow,1,Wedomartani,2009,9,critical,109.0,40.57,mqtt_qos1,,1,1,0.9835,265.22,70
+fair-smoke-mqtt_qos1-dlow_llow-s1,mqtt_qos1,dlow_llow,1,Wedomartani,2010,10,critical,31.0,46.71,mqtt_qos1,,1,1,1.0947,154.68,69
+fair-smoke-mqtt_qos1-dlow_llow-s1,mqtt_qos1,dlow_llow,1,Wedomartani,2011,11,critical,25.9,48.5,mqtt_qos1,,1,1,1.2082,41.99,69
+fair-smoke-mqtt_qos1-dlow_llow-s1,mqtt_qos1,dlow_llow,1,Tabanan,3000,0,warning,38.6,29.9,mqtt_qos1,,1,1,0.0014,42.43,65
+fair-smoke-mqtt_qos1-dlow_llow-s1,mqtt_qos1,dlow_llow,1,Tabanan,3001,1,warning,12.6,29.63,mqtt_qos1,,1,1,0.1109,84.06,65
+fair-smoke-mqtt_qos1-dlow_llow-s1,mqtt_qos1,dlow_llow,1,Tabanan,3002,2,warning,12.4,29.28,mqtt_qos1,,1,1,0.2215,61.65,65
+fair-smoke-mqtt_qos1-dlow_llow-s1,mqtt_qos1,dlow_llow,1,Tabanan,3003,3,warning,13.6,27.68,mqtt_qos1,,1,1,0.3316,3.11,65
+fair-smoke-mqtt_qos1-dlow_llow-s1,mqtt_qos1,dlow_llow,1,Tabanan,3004,4,warning,12.7,27.38,mqtt_qos1,,1,1,0.4427,34.96,65
+fair-smoke-mqtt_qos1-dlow_llow-s1,mqtt_qos1,dlow_llow,1,Tabanan,3005,5,warning,22.7,26.37,mqtt_qos1,,1,1,0.5524,45.08,65
+fair-smoke-mqtt_qos1-dlow_llow-s1,mqtt_qos1,dlow_llow,1,Tabanan,3006,6,warning,16.5,22.5,mqtt_qos1,,1,1,0.6641,1.93,65
+fair-smoke-mqtt_qos1-dlow_llow-s1,mqtt_qos1,dlow_llow,1,Tabanan,3007,7,warning,8.7,22.34,mqtt_qos1,,1,1,0.7777,32.44,64
+fair-smoke-mqtt_qos1-dlow_llow-s1,mqtt_qos1,dlow_llow,1,Tabanan,3008,8,warning,26.9,20.52,mqtt_qos1,,1,1,0.8751,40.8,65
+fair-smoke-mqtt_qos1-dlow_llow-s1,mqtt_qos1,dlow_llow,1,Tabanan,3009,9,warning,14.9,18.77,mqtt_qos1,,1,1,0.9853,18.47,65
+fair-smoke-mqtt_qos1-dlow_llow-s1,mqtt_qos1,dlow_llow,1,Tabanan,3010,10,warning,33.4,16.94,mqtt_qos1,,1,1,1.0952,2.15,65
+fair-smoke-mqtt_qos1-dlow_llow-s1,mqtt_qos1,dlow_llow,1,Tabanan,3011,11,warning,22.2,18.95,mqtt_qos1,,1,1,1.2092,5.61,65
+fair-smoke-mqtt_qos1-dlow_llow-s1,mqtt_qos1,dlow_llow,1,Padang2 Uluwatu,4000,0,normal,1.4,5.69,mqtt_qos1,,1,1,0.0017,15.67,72
+fair-smoke-mqtt_qos1-dlow_llow-s1,mqtt_qos1,dlow_llow,1,Padang2 Uluwatu,4001,1,normal,2.7,4.58,mqtt_qos1,,1,1,0.1089,25.36,72
+fair-smoke-mqtt_qos1-dlow_llow-s1,mqtt_qos1,dlow_llow,1,Padang2 Uluwatu,4002,2,normal,3.8,3.69,mqtt_qos1,,1,1,0.2221,38.93,72
+fair-smoke-mqtt_qos1-dlow_llow-s1,mqtt_qos1,dlow_llow,1,Padang2 Uluwatu,4003,3,normal,3.7,3.45,mqtt_qos1,,1,1,0.3321,18.25,72
+fair-smoke-mqtt_qos1-dlow_llow-s1,mqtt_qos1,dlow_llow,1,Padang2 Uluwatu,4004,4,normal,3.7,3.44,mqtt_qos1,,1,1,0.4438,30.5,72
+fair-smoke-mqtt_qos1-dlow_llow-s1,mqtt_qos1,dlow_llow,1,Padang2 Uluwatu,4005,5,normal,2.2,3.92,mqtt_qos1,,1,1,0.5535,46.68,72
+fair-smoke-mqtt_qos1-dlow_llow-s1,mqtt_qos1,dlow_llow,1,Padang2 Uluwatu,4006,6,normal,5.6,3.75,mqtt_qos1,,1,1,0.6635,1.83,72
+fair-smoke-mqtt_qos1-dlow_llow-s1,mqtt_qos1,dlow_llow,1,Padang2 Uluwatu,4007,7,normal,3.0,3.88,mqtt_qos1,,1,1,0.7767,34.2,72
+fair-smoke-mqtt_qos1-dlow_llow-s1,mqtt_qos1,dlow_llow,1,Padang2 Uluwatu,4008,8,normal,2.6,3.69,mqtt_qos1,,1,1,0.8741,48.2,72
+fair-smoke-mqtt_qos1-dlow_llow-s1,mqtt_qos1,dlow_llow,1,Padang2 Uluwatu,4009,9,normal,9.1,4.35,mqtt_qos1,,1,1,0.9839,26.98,72
+fair-smoke-mqtt_qos1-dlow_llow-s1,mqtt_qos1,dlow_llow,1,Padang2 Uluwatu,4010,10,normal,3.7,5.09,mqtt_qos1,,1,1,1.0948,43.44,72
+fair-smoke-mqtt_qos1-dlow_llow-s1,mqtt_qos1,dlow_llow,1,Padang2 Uluwatu,4011,11,normal,3.3,5.3,mqtt_qos1,,1,1,1.2112,5.16,72
+fair-smoke-coap_con-dlow_llow-s1,coap_con,dlow_llow,1,Bogor Selatan,0,0,critical,16.7,51.98,coap_con,,1,1,0.0009,19.88,68
+fair-smoke-coap_con-dlow_llow-s1,coap_con,dlow_llow,1,Bogor Selatan,1,1,critical,45.1,38.8,coap_con,,1,1,0.1119,21.88,68
+fair-smoke-coap_con-dlow_llow-s1,coap_con,dlow_llow,1,Bogor Selatan,2,2,warning,22.3,36.3,coap_con,,1,1,0.2232,17.29,68
+fair-smoke-coap_con-dlow_llow-s1,coap_con,dlow_llow,1,Bogor Selatan,3,3,warning,28.8,27.57,coap_con,,1,1,0.3352,16.1,68
+fair-smoke-coap_con-dlow_llow-s1,coap_con,dlow_llow,1,Bogor Selatan,4,4,warning,22.7,26.29,coap_con,,1,1,0.4474,18.22,68
+fair-smoke-coap_con-dlow_llow-s1,coap_con,dlow_llow,1,Bogor Selatan,5,5,warning,41.3,35.28,coap_con,,1,1,0.5599,17.1,68
+fair-smoke-coap_con-dlow_llow-s1,coap_con,dlow_llow,1,Bogor Selatan,6,6,critical,37.8,38.43,coap_con,,1,1,0.6704,24.04,68
+fair-smoke-coap_con-dlow_llow-s1,coap_con,dlow_llow,1,Bogor Selatan,7,7,critical,33.1,39.3,coap_con,,1,1,0.7656,2.5,68
+fair-smoke-coap_con-dlow_llow-s1,coap_con,dlow_llow,1,Bogor Selatan,8,8,critical,35.6,46.07,coap_con,,1,1,0.8868,42.45,68
+fair-smoke-coap_con-dlow_llow-s1,coap_con,dlow_llow,1,Bogor Selatan,9,9,critical,27.5,39.9,coap_con,,1,1,0.9871,16.84,68
+fair-smoke-coap_con-dlow_llow-s1,coap_con,dlow_llow,1,Bogor Selatan,10,10,warning,1.08,29.2,coap_con,,1,1,1.0986,16.26,68
+fair-smoke-coap_con-dlow_llow-s1,coap_con,dlow_llow,1,Bogor Selatan,11,11,warning,36.9,23.31,coap_con,,1,1,1.2103,22.04,69
+fair-smoke-coap_con-dlow_llow-s1,coap_con,dlow_llow,1,Jakarta Central,1000,0,warning,3.0,36.25,coap_con,,1,1,0.0016,20.85,72
+fair-smoke-coap_con-dlow_llow-s1,coap_con,dlow_llow,1,Jakarta Central,1001,1,warning,9.0,28.54,coap_con,,1,1,0.111,26.96,72
+fair-smoke-coap_con-dlow_llow-s1,coap_con,dlow_llow,1,Jakarta Central,1002,2,warning,9.0,15.54,coap_con,,1,1,0.223,19.97,72
+fair-smoke-coap_con-dlow_llow-s1,coap_con,dlow_llow,1,Jakarta Central,1003,3,warning,51.0,23.0,coap_con,,1,1,0.3353,16.93,73
+fair-smoke-coap_con-dlow_llow-s1,coap_con,dlow_llow,1,Jakarta Central,1004,4,warning,30.0,23.25,coap_con,,1,1,0.4471,20.09,73
+fair-smoke-coap_con-dlow_llow-s1,coap_con,dlow_llow,1,Jakarta Central,1005,5,warning,7.0,15.71,coap_con,,1,1,0.5602,21.35,72
+fair-smoke-coap_con-dlow_llow-s1,coap_con,dlow_llow,1,Jakarta Central,1006,6,warning,7.0,15.58,coap_con,,1,1,0.6707,20.17,72
+fair-smoke-coap_con-dlow_llow-s1,coap_con,dlow_llow,1,Jakarta Central,1007,7,normal,4.0,12.42,coap_con,,1,1,0.7657,3.21,72
+fair-smoke-coap_con-dlow_llow-s1,coap_con,dlow_llow,1,Jakarta Central,1008,8,normal,6.0,11.12,coap_con,,1,1,0.887,3.36,72
+fair-smoke-coap_con-dlow_llow-s1,coap_con,dlow_llow,1,Jakarta Central,1009,9,normal,2.0,9.5,coap_con,,1,1,0.987,16.58,72
+fair-smoke-coap_con-dlow_llow-s1,coap_con,dlow_llow,1,Jakarta Central,1010,10,normal,8.0,8.04,coap_con,,1,1,1.0982,18.86,72
+fair-smoke-coap_con-dlow_llow-s1,coap_con,dlow_llow,1,Jakarta Central,1011,11,normal,7.0,7.46,coap_con,,1,1,1.2106,20.97,72
+fair-smoke-coap_con-dlow_llow-s1,coap_con,dlow_llow,1,Wedomartani,2000,0,warning,38.1,28.57,coap_con,,1,1,0.0022,30.33,69
+fair-smoke-coap_con-dlow_llow-s1,coap_con,dlow_llow,1,Wedomartani,2001,1,warning,34.3,32.61,coap_con,,1,1,0.1117,24.78,69
+fair-smoke-coap_con-dlow_llow-s1,coap_con,dlow_llow,1,Wedomartani,2002,2,warning,8.54,30.99,coap_con,,1,1,0.2231,16.67,68
+fair-smoke-coap_con-dlow_llow-s1,coap_con,dlow_llow,1,Wedomartani,2003,3,warning,36.8,31.67,coap_con,,1,1,0.3354,16.39,69
+fair-smoke-coap_con-dlow_llow-s1,coap_con,dlow_llow,1,Wedomartani,2004,4,warning,19.6,32.67,coap_con,,1,1,0.4468,24.39,69
+fair-smoke-coap_con-dlow_llow-s1,coap_con,dlow_llow,1,Wedomartani,2005,5,warning,12.5,29.87,coap_con,,1,1,0.5605,23.61,69
+fair-smoke-coap_con-dlow_llow-s1,coap_con,dlow_llow,1,Wedomartani,2006,6,warning,32.0,26.2,coap_con,,1,1,0.6709,27.35,69
+fair-smoke-coap_con-dlow_llow-s1,coap_con,dlow_llow,1,Wedomartani,2007,7,warning,37.7,26.34,coap_con,,1,1,0.7655,3.07,69
+fair-smoke-coap_con-dlow_llow-s1,coap_con,dlow_llow,1,Wedomartani,2008,8,warning,78.8,35.52,coap_con,,1,1,0.8871,40.42,69
+fair-smoke-coap_con-dlow_llow-s1,coap_con,dlow_llow,1,Wedomartani,2009,9,critical,109.0,40.57,coap_con,,1,1,0.9871,17.41,70
+fair-smoke-coap_con-dlow_llow-s1,coap_con,dlow_llow,1,Wedomartani,2010,10,critical,31.0,46.71,coap_con,,1,1,1.0984,17.66,69
+fair-smoke-coap_con-dlow_llow-s1,coap_con,dlow_llow,1,Wedomartani,2011,11,critical,25.9,48.5,coap_con,,1,1,1.2116,18.05,69
+fair-smoke-coap_con-dlow_llow-s1,coap_con,dlow_llow,1,Tabanan,3000,0,warning,38.6,29.9,coap_con,,1,1,0.0026,16.61,65
+fair-smoke-coap_con-dlow_llow-s1,coap_con,dlow_llow,1,Tabanan,3001,1,warning,12.6,29.63,coap_con,,1,1,0.1121,27.27,65
+fair-smoke-coap_con-dlow_llow-s1,coap_con,dlow_llow,1,Tabanan,3002,2,warning,12.4,29.28,coap_con,,1,1,0.2233,20.85,65
+fair-smoke-coap_con-dlow_llow-s1,coap_con,dlow_llow,1,Tabanan,3003,3,warning,13.6,27.68,coap_con,,1,1,0.3351,18.02,65
+fair-smoke-coap_con-dlow_llow-s1,coap_con,dlow_llow,1,Tabanan,3004,4,warning,12.7,27.38,coap_con,,1,1,0.4478,22.51,65
+fair-smoke-coap_con-dlow_llow-s1,coap_con,dlow_llow,1,Tabanan,3005,5,warning,22.7,26.37,coap_con,,1,1,0.5594,19.53,65
+fair-smoke-coap_con-dlow_llow-s1,coap_con,dlow_llow,1,Tabanan,3006,6,warning,16.5,22.5,coap_con,,1,1,0.6701,26.36,65
+fair-smoke-coap_con-dlow_llow-s1,coap_con,dlow_llow,1,Tabanan,3007,7,warning,8.7,22.34,coap_con,,1,1,0.7652,31.54,64
+fair-smoke-coap_con-dlow_llow-s1,coap_con,dlow_llow,1,Tabanan,3008,8,warning,26.9,20.52,coap_con,,1,1,0.8872,4.93,65
+fair-smoke-coap_con-dlow_llow-s1,coap_con,dlow_llow,1,Tabanan,3009,9,warning,14.9,18.77,coap_con,,1,1,0.9868,18.09,65
+fair-smoke-coap_con-dlow_llow-s1,coap_con,dlow_llow,1,Tabanan,3010,10,warning,33.4,16.94,coap_con,,1,1,1.0979,21.09,65
+fair-smoke-coap_con-dlow_llow-s1,coap_con,dlow_llow,1,Tabanan,3011,11,warning,22.2,18.95,coap_con,,1,1,1.2099,17.59,65
+fair-smoke-coap_con-dlow_llow-s1,coap_con,dlow_llow,1,Padang2 Uluwatu,4000,0,normal,1.4,5.69,coap_con,,1,1,0.0029,21.65,72
+fair-smoke-coap_con-dlow_llow-s1,coap_con,dlow_llow,1,Padang2 Uluwatu,4001,1,normal,2.7,4.58,coap_con,,1,1,0.1114,19.08,72
+fair-smoke-coap_con-dlow_llow-s1,coap_con,dlow_llow,1,Padang2 Uluwatu,4002,2,normal,3.8,3.69,coap_con,,1,1,0.2228,16.48,72
+fair-smoke-coap_con-dlow_llow-s1,coap_con,dlow_llow,1,Padang2 Uluwatu,4003,3,normal,3.7,3.45,coap_con,,1,1,0.3349,17.82,72
+fair-smoke-coap_con-dlow_llow-s1,coap_con,dlow_llow,1,Padang2 Uluwatu,4004,4,normal,3.7,3.44,coap_con,,1,1,0.4476,21.62,72
+fair-smoke-coap_con-dlow_llow-s1,coap_con,dlow_llow,1,Padang2 Uluwatu,4005,5,normal,2.2,3.92,coap_con,,1,1,0.5591,26.68,72
+fair-smoke-coap_con-dlow_llow-s1,coap_con,dlow_llow,1,Padang2 Uluwatu,4006,6,normal,5.6,3.75,coap_con,,1,1,0.6697,18.1,72
+fair-smoke-coap_con-dlow_llow-s1,coap_con,dlow_llow,1,Padang2 Uluwatu,4007,7,normal,3.0,3.88,coap_con,,1,1,0.7649,2461.76,72
+fair-smoke-coap_con-dlow_llow-s1,coap_con,dlow_llow,1,Padang2 Uluwatu,4008,8,normal,2.6,3.69,coap_con,,1,1,0.8761,55.02,72
+fair-smoke-coap_con-dlow_llow-s1,coap_con,dlow_llow,1,Padang2 Uluwatu,4009,9,normal,9.1,4.35,coap_con,,1,1,0.9872,18.1,72
+fair-smoke-coap_con-dlow_llow-s1,coap_con,dlow_llow,1,Padang2 Uluwatu,4010,10,normal,3.7,5.09,coap_con,,1,1,1.0988,19.56,72
+fair-smoke-coap_con-dlow_llow-s1,coap_con,dlow_llow,1,Padang2 Uluwatu,4011,11,normal,3.3,5.3,coap_con,,1,1,1.2109,19.72,72
+fair-smoke-adaptive-dlow_llow-s1,adaptive,dlow_llow,1,Bogor Selatan,0,0,critical,16.7,51.98,mqtt_qos1,50.0,1,1,0.0002,33.05,68
+fair-smoke-adaptive-dlow_llow-s1,adaptive,dlow_llow,1,Bogor Selatan,1,1,critical,45.1,38.8,mqtt_qos1,50.0,1,1,0.1116,5.03,68
+fair-smoke-adaptive-dlow_llow-s1,adaptive,dlow_llow,1,Bogor Selatan,2,2,warning,22.3,36.3,mqtt_qos1,50.0,1,1,0.2229,8.74,68
+fair-smoke-adaptive-dlow_llow-s1,adaptive,dlow_llow,1,Bogor Selatan,3,3,warning,28.8,27.57,mqtt_qos1,50.0,1,1,0.3329,32.33,68
+fair-smoke-adaptive-dlow_llow-s1,adaptive,dlow_llow,1,Bogor Selatan,4,4,warning,22.7,26.29,mqtt_qos1,50.0,1,1,0.4452,34.34,68
+fair-smoke-adaptive-dlow_llow-s1,adaptive,dlow_llow,1,Bogor Selatan,5,5,warning,41.3,35.28,mqtt_qos1,50.0,1,1,0.5547,23.13,68
+fair-smoke-adaptive-dlow_llow-s1,adaptive,dlow_llow,1,Bogor Selatan,6,6,critical,37.8,38.43,mqtt_qos1,50.0,1,1,0.6643,51.14,68
+fair-smoke-adaptive-dlow_llow-s1,adaptive,dlow_llow,1,Bogor Selatan,7,7,critical,33.1,39.3,mqtt_qos1,50.0,1,1,0.7775,25.94,68
+fair-smoke-adaptive-dlow_llow-s1,adaptive,dlow_llow,1,Bogor Selatan,8,8,critical,35.6,46.07,mqtt_qos1,50.0,1,1,0.8716,48.57,68
+fair-smoke-adaptive-dlow_llow-s1,adaptive,dlow_llow,1,Bogor Selatan,9,9,critical,27.5,39.9,mqtt_qos1,50.0,1,1,0.9686,15.41,68
+fair-smoke-adaptive-dlow_llow-s1,adaptive,dlow_llow,1,Bogor Selatan,10,10,warning,1.08,29.2,coap_con,17.9,1,1,1.2696,575.49,68
+fair-smoke-adaptive-dlow_llow-s1,adaptive,dlow_llow,1,Bogor Selatan,11,11,warning,36.9,23.31,coap_con,19.7,1,1,1.5508,302.83,69
+fair-smoke-adaptive-dlow_llow-s1,adaptive,dlow_llow,1,Jakarta Central,1000,0,warning,3.0,36.25,mqtt_qos1,50.0,1,1,0.0002,32.14,72
+fair-smoke-adaptive-dlow_llow-s1,adaptive,dlow_llow,1,Jakarta Central,1001,1,warning,9.0,28.54,mqtt_qos1,50.0,1,1,0.1116,37.66,72
+fair-smoke-adaptive-dlow_llow-s1,adaptive,dlow_llow,1,Jakarta Central,1002,2,warning,9.0,15.54,mqtt_qos1,50.0,1,1,0.2229,11.81,72
+fair-smoke-adaptive-dlow_llow-s1,adaptive,dlow_llow,1,Jakarta Central,1003,3,warning,51.0,23.0,mqtt_qos1,50.0,1,1,0.3329,2.78,73
+fair-smoke-adaptive-dlow_llow-s1,adaptive,dlow_llow,1,Jakarta Central,1004,4,warning,30.0,23.25,mqtt_qos1,50.0,1,1,0.4453,36.42,73
+fair-smoke-adaptive-dlow_llow-s1,adaptive,dlow_llow,1,Jakarta Central,1005,5,warning,7.0,15.71,mqtt_qos1,50.0,1,1,0.5548,12.57,72
+fair-smoke-adaptive-dlow_llow-s1,adaptive,dlow_llow,1,Jakarta Central,1006,6,warning,7.0,15.58,mqtt_qos1,50.0,1,1,0.6642,10.96,72
+fair-smoke-adaptive-dlow_llow-s1,adaptive,dlow_llow,1,Jakarta Central,1007,7,normal,4.0,12.42,mqtt_qos1,50.0,1,1,0.7772,22.21,72
+fair-smoke-adaptive-dlow_llow-s1,adaptive,dlow_llow,1,Jakarta Central,1008,8,normal,6.0,11.12,mqtt_qos1,50.0,1,1,0.8716,13.99,72
+fair-smoke-adaptive-dlow_llow-s1,adaptive,dlow_llow,1,Jakarta Central,1009,9,normal,2.0,9.5,mqtt_qos1,50.0,1,1,0.9686,31.36,72
+fair-smoke-adaptive-dlow_llow-s1,adaptive,dlow_llow,1,Jakarta Central,1010,10,normal,8.0,8.04,coap_con,17.6,1,1,1.0763,770.87,72
+fair-smoke-adaptive-dlow_llow-s1,adaptive,dlow_llow,1,Jakarta Central,1011,11,normal,7.0,7.46,coap_con,17.5,1,1,1.4555,401.44,72
+fair-smoke-adaptive-dlow_llow-s1,adaptive,dlow_llow,1,Wedomartani,2000,0,warning,38.1,28.57,mqtt_qos1,50.0,1,1,0.0002,33.48,69
+fair-smoke-adaptive-dlow_llow-s1,adaptive,dlow_llow,1,Wedomartani,2001,1,warning,34.3,32.61,mqtt_qos1,50.0,1,1,0.1117,42.28,69
+fair-smoke-adaptive-dlow_llow-s1,adaptive,dlow_llow,1,Wedomartani,2002,2,warning,8.54,30.99,mqtt_qos1,50.0,1,1,0.2229,5.92,68
+fair-smoke-adaptive-dlow_llow-s1,adaptive,dlow_llow,1,Wedomartani,2003,3,warning,36.8,31.67,mqtt_qos1,50.0,1,1,0.3329,3.99,69
+fair-smoke-adaptive-dlow_llow-s1,adaptive,dlow_llow,1,Wedomartani,2004,4,warning,19.6,32.67,mqtt_qos1,50.0,1,1,0.4454,39.01,69
+fair-smoke-adaptive-dlow_llow-s1,adaptive,dlow_llow,1,Wedomartani,2005,5,warning,12.5,29.87,mqtt_qos1,50.0,1,1,0.5548,10.2,69
+fair-smoke-adaptive-dlow_llow-s1,adaptive,dlow_llow,1,Wedomartani,2006,6,warning,32.0,26.2,mqtt_qos1,50.0,1,1,0.664,8.38,69
+fair-smoke-adaptive-dlow_llow-s1,adaptive,dlow_llow,1,Wedomartani,2007,7,warning,37.7,26.34,mqtt_qos1,50.0,1,1,0.7769,29.57,69
+fair-smoke-adaptive-dlow_llow-s1,adaptive,dlow_llow,1,Wedomartani,2008,8,warning,78.8,35.52,mqtt_qos1,50.0,1,1,0.8714,10.19,69
+fair-smoke-adaptive-dlow_llow-s1,adaptive,dlow_llow,1,Wedomartani,2009,9,critical,109.0,40.57,mqtt_qos1,50.0,1,1,0.9681,36.68,70
+fair-smoke-adaptive-dlow_llow-s1,adaptive,dlow_llow,1,Wedomartani,2010,10,critical,31.0,46.71,mqtt_qos1,41.4,1,1,1.2015,635.17,69
+fair-smoke-adaptive-dlow_llow-s1,adaptive,dlow_llow,1,Wedomartani,2011,11,critical,25.9,48.5,mqtt_qos1,46.0,1,1,1.5197,330.86,69
+fair-smoke-adaptive-dlow_llow-s1,adaptive,dlow_llow,1,Tabanan,3000,0,warning,38.6,29.9,mqtt_qos1,50.0,1,1,0.0003,2.26,65
+fair-smoke-adaptive-dlow_llow-s1,adaptive,dlow_llow,1,Tabanan,3001,1,warning,12.6,29.63,mqtt_qos1,50.0,1,1,0.1117,55.28,65
+fair-smoke-adaptive-dlow_llow-s1,adaptive,dlow_llow,1,Tabanan,3002,2,warning,12.4,29.28,mqtt_qos1,50.0,1,1,0.2229,12.5,65
+fair-smoke-adaptive-dlow_llow-s1,adaptive,dlow_llow,1,Tabanan,3003,3,warning,13.6,27.68,mqtt_qos1,50.0,1,1,0.3329,35.83,65
+fair-smoke-adaptive-dlow_llow-s1,adaptive,dlow_llow,1,Tabanan,3004,4,warning,12.7,27.38,mqtt_qos1,50.0,1,1,0.4458,39.53,65
+fair-smoke-adaptive-dlow_llow-s1,adaptive,dlow_llow,1,Tabanan,3005,5,warning,22.7,26.37,mqtt_qos1,50.0,1,1,0.5549,15.19,65
+fair-smoke-adaptive-dlow_llow-s1,adaptive,dlow_llow,1,Tabanan,3006,6,warning,16.5,22.5,mqtt_qos1,50.0,1,1,0.6641,53.45,65
+fair-smoke-adaptive-dlow_llow-s1,adaptive,dlow_llow,1,Tabanan,3007,7,warning,8.7,22.34,mqtt_qos1,50.0,1,1,0.7771,38.54,64
+fair-smoke-adaptive-dlow_llow-s1,adaptive,dlow_llow,1,Tabanan,3008,8,warning,26.9,20.52,mqtt_qos1,50.0,1,1,0.8716,49.91,65
+fair-smoke-adaptive-dlow_llow-s1,adaptive,dlow_llow,1,Tabanan,3009,9,warning,14.9,18.77,mqtt_qos1,50.0,1,1,0.9684,34.0,65
+fair-smoke-adaptive-dlow_llow-s1,adaptive,dlow_llow,1,Tabanan,3010,10,warning,33.4,16.94,coap_con,20.4,1,1,1.1318,711.13,65
+fair-smoke-adaptive-dlow_llow-s1,adaptive,dlow_llow,1,Tabanan,3011,11,warning,22.2,18.95,coap_con,21.1,1,1,1.4891,379.68,65
+fair-smoke-adaptive-dlow_llow-s1,adaptive,dlow_llow,1,Padang2 Uluwatu,4000,0,normal,1.4,5.69,mqtt_qos1,50.0,1,1,0.0003,3.14,72
+fair-smoke-adaptive-dlow_llow-s1,adaptive,dlow_llow,1,Padang2 Uluwatu,4001,1,normal,2.7,4.58,mqtt_qos1,50.0,1,1,0.1117,5.77,72
+fair-smoke-adaptive-dlow_llow-s1,adaptive,dlow_llow,1,Padang2 Uluwatu,4002,2,normal,3.8,3.69,mqtt_qos1,50.0,1,1,0.2229,13.42,72
+fair-smoke-adaptive-dlow_llow-s1,adaptive,dlow_llow,1,Padang2 Uluwatu,4003,3,normal,3.7,3.45,mqtt_qos1,50.0,1,1,0.3329,31.47,72
+fair-smoke-adaptive-dlow_llow-s1,adaptive,dlow_llow,1,Padang2 Uluwatu,4004,4,normal,3.7,3.44,mqtt_qos1,50.0,1,1,0.4456,1391.55,72
+fair-smoke-adaptive-dlow_llow-s1,adaptive,dlow_llow,1,Padang2 Uluwatu,4005,5,normal,2.2,3.92,mqtt_qos1,50.0,1,1,0.5549,1282.94,72
+fair-smoke-adaptive-dlow_llow-s1,adaptive,dlow_llow,1,Padang2 Uluwatu,4006,6,normal,5.6,3.75,mqtt_qos1,50.0,1,1,0.6641,1174.46,72
+fair-smoke-adaptive-dlow_llow-s1,adaptive,dlow_llow,1,Padang2 Uluwatu,4007,7,normal,3.0,3.88,mqtt_qos1,50.0,1,1,0.777,1075.04,72
+fair-smoke-adaptive-dlow_llow-s1,adaptive,dlow_llow,1,Padang2 Uluwatu,4008,8,normal,2.6,3.69,mqtt_qos1,50.0,1,1,0.8715,991.36,72
+fair-smoke-adaptive-dlow_llow-s1,adaptive,dlow_llow,1,Padang2 Uluwatu,4009,9,normal,9.1,4.35,mqtt_qos1,50.0,1,1,0.9684,894.92,72
+fair-smoke-adaptive-dlow_llow-s1,adaptive,dlow_llow,1,Padang2 Uluwatu,4010,10,normal,3.7,5.09,mqtt_qos1,50.0,1,1,1.3561,508.17,72
+fair-smoke-adaptive-dlow_llow-s1,adaptive,dlow_llow,1,Padang2 Uluwatu,4011,11,normal,3.3,5.3,mqtt_qos1,50.0,1,1,1.6111,253.47,72

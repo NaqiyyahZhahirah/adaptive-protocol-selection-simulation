@@ -1,0 +1,4 @@
+run_id,scenario,condition,seed,n_sent,n_recv,payload_bytes_total,wire_tcp,wire_udp,wire_total,duration_s
+fair-smoke-mqtt_qos1-dlow_llow-s1,mqtt_qos1,dlow_llow,1,60,60,4154,11178,0,11178,2.8
+fair-smoke-coap_con-dlow_llow-s1,coap_con,dlow_llow,1,60,60,4154,0,8706,8706,3.8
+fair-smoke-adaptive-dlow_llow-s1,adaptive,dlow_llow,1,60,60,4154,9851,855,10706,2.5

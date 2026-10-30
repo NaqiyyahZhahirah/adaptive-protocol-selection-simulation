@@ -25,9 +25,7 @@ class AdaptiveController:
         # gagal-percobaan-pertama per pertukaran -> loss per arah (Tabel 3.3)
         self.loss_pct = 100.0 * (1.0 - (1.0 - f) ** (1.0 / mean_dir))
         rtts = [r for r, bad, _ in obs if not bad and r is not None]
-        rtt = sum(rtts) / len(rtts) if rtts else None
-        if self.variant == "v2" and rtts:
-            rtt = min(rtts)
+        self.rtt_ms = sum(rtts) / len(rtts) if rtts else None
 
     def decide(self, pm25_24h):
         if self.loss_pct is None:

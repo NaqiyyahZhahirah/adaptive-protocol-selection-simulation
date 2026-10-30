@@ -17,6 +17,26 @@ class CoapSender:
 
     async def start(self):
         self.non_ctx = await aiocoap.Context.create_client_context()
+        ctx = await aiocoap.Context.create_client_context()
+        ready = False
+        try:
+            request = aiocoap.Message(
+                code=aiocoap.POST,
+                mtype=aiocoap.CON,
+                uri=f"coap://{C.HOST}:{self.port}/pm25",
+                payload=b'{"m":-1}',
+            )
+            await asyncio.wait_for(
+                ctx.request(request).response,
+                C.COAP_WAIT["CON"],
+            )
+            ready = True
+        finally:
+            if ready:
+                self.all.append(ctx)
+                self.free.append(ctx)
+            else:
+                await ctx.shutdown()
 
     async def _acquire(self):
         if self.free:

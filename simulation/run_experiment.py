@@ -88,6 +88,7 @@ async def run_one(scenario, cond_name, seed, messages, run_id):
 
         driver = ConditionDriver(injectors, cond_name, seed, n_msgs)
         senders = [make_sender(scenario, i, mq, co, ctl) for i in range(len(nodes))]
+        collector.recv.clear()                    # discard CoAP warm-up probes
         for inj in injectors:
             inj.reset_counters()                     # abaikan byte setup koneksi
 
@@ -109,6 +110,14 @@ async def run_one(scenario, cond_name, seed, messages, run_id):
         _, pending = await asyncio.wait(tasks, timeout=C.DRAIN_TIMEOUT)
         for p in pending:
             p.cancel()
+        task_results = await asyncio.gather(*tasks, return_exceptions=True)
+        failures = [
+            result for result in task_results
+            if isinstance(result, BaseException)
+            and not isinstance(result, asyncio.CancelledError)
+        ]
+        if failures:
+            raise failures[0]
         await asyncio.sleep(0.5)
         duration = time.perf_counter() - t0
 
